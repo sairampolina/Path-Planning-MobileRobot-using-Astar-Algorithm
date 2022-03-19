@@ -146,7 +146,97 @@ def actionZero(node,canvas,step_size):
     else:
         return False,next_node
 
+def actionPositiveThirty(node,canvas,step_size):
+    next_node=copy.deepcopy(node)
+    
+    theta_action=30
+    
+    x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
+    
+    
+    theta_now=theta_p+theta_action
+    
+    x=x1+step_size*(np.cos(np.radians(theta_now)))
+    y=y1+step_size*(np.sin(np.radians(theta_now)))
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+        
+        next_node[0]=x
+        next_node[1]=y
+        next_node[2]=theta_p+theta_action
+        
+        return True,next_node
+    else:
+        return False,next_node
 
+def actionPositiveSixty(node,canvas,step_size):
+    next_node=copy.deepcopy(node)
+    
+    theta_action=60
+    
+    x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
+    
+    
+    theta_now=theta_p+theta_action
+    
+    x=x1+step_size*(np.cos(np.radians(theta_now)))
+    y=y1+step_size*(np.sin(np.radians(theta_now)))
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+        
+        next_node[0]=x
+        next_node[1]=y
+        next_node[2]=theta_p+theta_action
+        
+        return True,next_node
+    else:
+        return False,next_node
+
+def actionNegativeThirty(node,canvas,step_size):
+    next_node=copy.deepcopy(node)
+    
+    theta_action=-30
+    
+    x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
+    
+    
+    theta_now=theta_p+theta_action
+    
+    x=x1+step_size*(np.cos(np.radians(theta_now)))
+    y=y1+step_size*(np.sin(np.radians(theta_now)))
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+        
+        next_node[0]=x
+        next_node[1]=y
+        next_node[2]=theta_p+theta_action
+        
+        return True,next_node
+    else:
+        return False,next_node
+
+def actionNegativeSixty(node,canvas,step_size):
+    next_node=copy.deepcopy(node)
+    
+    theta_action=-60
+    
+    x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
+    
+    
+    theta_now=theta_p+theta_action
+    
+    x=x1+step_size*(np.cos(np.radians(theta_now)))
+    y=y1+step_size*(np.sin(np.radians(theta_now)))
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+        
+        next_node[0]=x
+        next_node[1]=y
+        next_node[2]=theta_p+theta_action
+        
+        return True,next_node
+    else:
+        return False,next_node
 
 def isItDuplicatenode(p,q,r,V):
     
@@ -179,9 +269,11 @@ if __name__=='__main__':
     
     start_state,goal_state,clearence,robot_radius,step_size=getInputs()
     
-    print(start_state)
-    print(goal_state)
-    
+# =============================================================================
+#     print(start_state)
+#     print(goal_state)
+#     
+# =============================================================================
     # changing world co-ordinates to map-coordinates
     start_state[1]=a_height-start_state[1]
     goal_state[1]=a_height-goal_state[1]
@@ -190,7 +282,9 @@ if __name__=='__main__':
     
     V=np.zeros((500,800,12),dtype='uint8')
     
-    x,y=actionZero([10.0,9.0,30],canvas,step_size)
+    # x,y=actionZero([10.0,9.0,30],canvas,step_size)
+    
+    x,y=actionNegativeThirty([10.0,9.0,30],canvas,step_size)
     
     print(x)
     print(y)
