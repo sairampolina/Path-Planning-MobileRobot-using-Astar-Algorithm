@@ -119,27 +119,84 @@ def getInputs():
             break
 
     
-    return start_state,goal_state,clearence,robot_radius,step_size
+    return start_state,goal_state,int(clearence),int(robot_radius),int(step_size)
        
+
+
+def actionZero(node,canvas,step_size):
+    next_node=copy.deepcopy(node)
+    
+    theta_action=0
+    
+    x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
     
     
+    theta_now=theta_p+theta_action
+    
+    x=x1+step_size*(np.cos(np.radians(theta_now)))
+    y=y1+step_size*(np.sin(np.radians(theta_now)))
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+        
+        next_node[0]=int(x)
+        next_node[1]=int(y)
+        next_node[2]=theta_p+theta_action
+        
+        return True,next_node
+    else:
+        return False,next_node
 
-canvas=np.ones((250,400,3),dtype='uint8')
-canvas=createObstacles(canvas)
-
-height,width,_=canvas.shape
-a_height=height-1
-a_width=width-1
-
-start_state,goal_state,clearence,robot_radius,step_size=getInputs()
 
 
-# changing world co-ordinates to map-coordinates
-start_state[1]=a_height-start_state[1]
-goal_state[1]=a_height-goal_state[1]
+def isItDuplicatenode(p,q,r,V):
+    
+    p=round(p*2)/2
+    q=round(q*2)/2
+    
+    if r==360:
+        r=0
+   
+    print(p,q,r)
+   
+    if V[int(2*p)][int(2*q)][int(r//30)]==0:
+        
+        V[int(2*p)][int(2*q)][int(r//30)]=1
+        return False
+    else:
+        return True
+    
+    
+    
 
-
-# print(goal_state)
-# cv2.imshow('CANVAS',canvas)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+if __name__=='__main__':
+    
+    canvas=np.ones((250,400,3),dtype='uint8')
+    canvas=createObstacles(canvas)
+    
+    height,width,_=canvas.shape
+    a_height=height-1
+    a_width=width-1
+    
+    start_state,goal_state,clearence,robot_radius,step_size=getInputs()
+    
+    print(start_state)
+    print(goal_state)
+    
+    # changing world co-ordinates to map-coordinates
+    start_state[1]=a_height-start_state[1]
+    goal_state[1]=a_height-goal_state[1]
+    
+    # creating matrix V
+    
+    V=np.zeros((500,800,12),dtype='uint8')
+    
+    x,y=actionZero([10.0,9.0,30],canvas,step_size)
+    
+    print(x)
+    print(y)
+    
+    
+    # print(goal_state)
+    # cv2.imshow('CANVAS',canvas)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
