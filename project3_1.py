@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 import copy
 import matplotlib.pyplot as plt
-
+import heapq as hp
 
 def createObstacles(canvas):
      
@@ -255,7 +255,82 @@ def isItDuplicatenode(p,q,r,V):
     else:
         return True
     
+
+def c2g(coordinates1,goal_state):
+    point1=np.array(copy.deepcopy(coordinates1[0:2]))
+    goal_point=np.array(copy.deepcopy(goal_state[0:2]))
     
+    dis=np.linalg.norm(point1-goal_point)
+    
+    return int(dis)
+
+def AStar(start_state,goal_state,canvas,step_size):
+    open_list = []
+    closed_list = {}
+    back_track_flag = False
+    hp.heapify(open_list)
+    c2g_i=c2g(start_state,goal_state)
+    hp.heappush(open_list,[c2g_i,0,start_state,start_state])
+    # 0: Total-cost,1:cost to come,2:parent node, 3: present node
+    
+    while(len(open_list)>0):
+        
+        
+        node=hp.heappop(open_list)
+        
+        # check if popped node is goal node
+        # if it is goal start back tracking
+        if node[3]==goal_state:
+            back_track_flag=True
+            print('Started BackTracking')
+            break
+        
+        # adding popped node to closed-list
+        closed_list[(node[3][0],node[3][1],node[3][2])]=node[2]
+        
+        print('before openlist',open_list)
+        print('before closed_list',closed_list)
+        present_c2c=node[1]
+        
+        # generate child
+        flag,next_node=actionPositiveThirty(node[3], canvas, step_size)
+        
+        if(flag):
+            
+            present_c2g=c2g(next_node,goal_state)
+            
+            # consider child if it is not in closed-list
+            
+            if tuple(next_node) not in closed_list:
+                
+                new_c2c=present_c2c+step_size
+                Total_cost=new_c2c+present_c2g
+                
+                
+                # if child is not in open_list add child with its  Total cost,c2c, and parent node
+                temp_list=[]
+                
+                for i in range(len(open_list)):
+                    temp_list.append(open_list[i][3])
+               
+                if tuple(next_node) not in temp_list:
+                    hp.heappush(open_list,[Total_cost,new_c2c, node[3],next_node])
+                    hp.heapify(open_list)
+                else:
+                    idx=temp_list.index(next_node) 
+                    if(Total_cost<open_list[idx][0]): # Updating the cost and parent node
+                           open_list[idx][0] = Total_cost
+                           open_list[idx][1] = new_c2c
+                           open_list[idx][2] = node[3]
+                           hp.heapify(open_list)
+                temp_list.clear()
+           
+        print("open_list",open_list)
+        print('closed_list',closed_list)
+        break         
+             
+
+
     
 
 if __name__=='__main__':
@@ -284,12 +359,13 @@ if __name__=='__main__':
     
     # x,y=actionZero([10.0,9.0,30],canvas,step_size)
     
-    x,y=actionNegativeThirty([10.0,9.0,30],canvas,step_size)
+    # x,y=actionNegativeThirty([10.0,9.0,30],canvas,step_size)
     
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
     
     
+    AStar(start_state,goal_state,canvas,step_size)
     # print(goal_state)
     # cv2.imshow('CANVAS',canvas)
     # cv2.waitKey(0)
