@@ -12,11 +12,16 @@ import matplotlib.pyplot as plt
 import heapq as hp
 
 def createObstacles(canvas):
-     
+    
+    Rad=int(input("Enter Robot radius: "))
+    clea=int(input("Enter clearence to be maintained for Robot: "))
+    offset=Rad+clea
+    
     height,width,_ = canvas.shape
            
     for i in range(width): 
         for j in range(height):
+            
             if(i-5<=0) or (i-395>=0) or (j-5 <=0) or (j-245>=0):
                 canvas[j][i]= [0,255,0]
     
@@ -133,10 +138,16 @@ def actionZero(node,canvas,step_size):
     
     theta_now=theta_p+theta_action
     
+    # if angle is negative, change angle to (positive counter clock wise angle)
+    if (theta_now<0):
+        theta_in_circular=360+theta_now
+    else:
+        theta_in_circular=theta_now
+
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=int(x)
         next_node[1]=int(y)
@@ -156,10 +167,16 @@ def actionPositiveThirty(node,canvas,step_size):
     
     theta_now=theta_p+theta_action
     
+    # if angle is negative, change angle to (counter clock wise angle)
+    if (theta_now<0):
+        theta_in_circular=360+theta_now
+    else:
+        theta_in_circular=theta_now
+
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -179,10 +196,16 @@ def actionPositiveSixty(node,canvas,step_size):
     
     theta_now=theta_p+theta_action
     
+    # if angle is negative, change angle to (counter clock wise angle)
+    if (theta_now<0):
+        theta_in_circular=360+theta_now
+    else:
+        theta_in_circular=theta_now
+    
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -196,16 +219,22 @@ def actionNegativeThirty(node,canvas,step_size):
     next_node=copy.deepcopy(node)
     
     theta_action=-30
-    
     x1,y1,theta_p=(next_node[0],next_node[1],next_node[2])
     
     
     theta_now=theta_p+theta_action
     
+    # if angle is negative, change angle to (counter clock wise angle)
+    if (theta_now<0):
+        theta_in_circular=360+theta_now
+    else:
+        theta_in_circular=theta_now
+    
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+    
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -225,10 +254,17 @@ def actionNegativeSixty(node,canvas,step_size):
     
     theta_now=theta_p+theta_action
     
+    # if angle is negative, change angle to (counter clock wise angle)
+    if (theta_now<0):
+        theta_in_circular=360+theta_now
+    else:
+        theta_in_circular=theta_now
+
+    
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_now,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -240,11 +276,14 @@ def actionNegativeSixty(node,canvas,step_size):
 
 def isItDuplicatenode(p,q,r,V):
     
+    if (p>249 or q>399):
+        return True
+     
     p=round(p*2)/2
     q=round(q*2)/2
     
-    if r==360:
-        r=0
+    if r>=360:
+        r=(r%360)
    
     # print(p,q,r)
    
@@ -287,7 +326,7 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
         p1=np.array(goal_state[0:2])
         p2=np.array(node[3][0:2])
         distance=np.linalg.norm(p1-p2)
-        l=(1.5*robot_radius)
+        l=(3*robot_radius)
         
         if (distance**2)<=(l**2):
             back_track_flag=True
@@ -432,7 +471,7 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
                            open_list[idx][2] = node[3]
                            hp.heapify(open_list)
                 temp_list.clear()
-        
+        print(len(open_list))
         hp.heapify(open_list)
 
     if(back_track_flag):
@@ -444,22 +483,40 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
     
 
 def backTrack(start_state,apprx_goal,closed_list,canvas):
-    parent=closed_list[tuple(apprx_goal)]
     optimal_path=[]
     optimal_path.append(apprx_goal)
     
+    parent=closed_list[tuple(apprx_goal)]
+    optimal_path.append(parent)
+    
     while(parent!=start_state):
-        optimal_path.append(parent)
         
         parent= closed_list[tuple(parent)]
+        optimal_path.append(parent)
     
     optimal_path.append(start_state)
     print(optimal_path)
+    
+    for state in optimal_path:
+        
+        x=int(state[0])
+        y=int(state[1])
+        
+        cv2.circle(canvas,(x,y),2,(0,0,255),-1)
+        # canvas[int(y)][int(x)]=[255,0,0]
+    
+    cv2.imshow('test', canvas)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
         
 if __name__=='__main__':
     
     canvas=np.ones((250,400,3),dtype='uint8')
     canvas=createObstacles(canvas)
+    
+    cv2.imshow('CANVAS',canvas)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     
     height,width,_=canvas.shape
     a_height=height-1
@@ -488,7 +545,7 @@ if __name__=='__main__':
     # print(y)
     
     
-    apprx_goal=AStar(start_state,goal_state,canvas,step_size,robot_radius)
+    AStar(start_state,goal_state,canvas,step_size,robot_radius)
     
     
     # print(goal_state)
