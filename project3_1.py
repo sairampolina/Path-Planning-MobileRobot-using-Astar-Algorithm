@@ -1,15 +1,13 @@
 
 """
 Created on Sat Mar 19 08:31:24 2022
-
-@author: sairam
 """
 
 import cv2
 import numpy as np
 import copy
-import matplotlib.pyplot as plt
 import heapq as hp
+import math
 
 def createObstacles(canvas):
     
@@ -22,18 +20,15 @@ def createObstacles(canvas):
     for i in range(width): 
         for j in range(height):
             
-            if(i-5<=0) or (i-395>=0) or (j-5 <=0) or (j-245>=0):
-                canvas[j][i]= [0,255,0]
-    
-            if ((i-300)**2+(j-65)**2-(45**2))<=0:
-                canvas[j][i]=[0,255,0]
+            if ((i-300)**2+(j-65)**2-((40+offset)**2))<=0:
+                canvas[j][i] = [0,255,0]
+                
+            if (j+(0.57*i)-(224.285-offset*1.151))>=0 and (j-(0.57*i)+(4.285+offset*1.151))>=0 and (i-(235+offset))<=0 and (j+(0.57*i)-(304.285+offset*1.151))<=0 and (j-(0.57*i)-(75.714+offset*1.151))<=0 and (i-(165-offset))>=0:
+                canvas[j][i] = [0,255,0]
+
+            if ((j+(0.316*i)-(76.392-offset*1.048)>=0) and (j+(0.857*i)-(138.571+offset*1.317)<=0) and (j-(0.114*i)-60.909)<=0) or ((j-(3.2*i)+(186+offset*3.352)>=0) and (j-(1.232*i)-(20.652+offset*1.586))<=0 and (j-(0.114*i)-60.909)>=0):
+                canvas[j][i] = [0,255,0]
             
-            if (j+(0.57*i)-218.53)>=0 and (j-(0.57*i)+10.04)>=0 and (i-240)<=0 and (j+(0.57*i)-310.04)<=0 and (j-(0.57*i)-81.465)<=0 and (i-160)>=0:
-                canvas[j][i]= [0,255,0]
-    
-            if ((j+(0.316*i)-71.1483)>=0 and (j+(0.857*i)-145.156)<=0 and (j-(0.114*i)-60.909)<=0) or ((j-(1.23*i)-28.576)<=0 and (j-(3.2*i)+202.763)>=0 and (j-(0.114*i)-60.909)>=0):
-                canvas[j][i]=[0,255,0]
- 
     return canvas
 
 start_state=[]
@@ -147,7 +142,7 @@ def actionZero(node,canvas,step_size):
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(math.floor(y))][int(math.ceil(x))][1]!=255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=int(x)
         next_node[1]=int(y)
@@ -176,7 +171,7 @@ def actionPositiveThirty(node,canvas,step_size):
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(math.floor(y))][int(math.ceil(x))][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -205,7 +200,7 @@ def actionPositiveSixty(node,canvas,step_size):
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(math.floor(y))][int(math.ceil(x))][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -234,7 +229,7 @@ def actionNegativeThirty(node,canvas,step_size):
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(math.floor(y))][int(math.ceil(x))][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -264,7 +259,7 @@ def actionNegativeSixty(node,canvas,step_size):
     x=x1+step_size*(np.cos(np.radians(theta_now)))
     y=y1+step_size*(np.sin(np.radians(theta_now)))
     
-    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(y)][int(x)][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
+    if ((x>=0 and x<=a_width) and (y>=0 and y<=a_height)) and (canvas[int(math.floor(y))][int(math.ceil(x))][1]<255) and (not isItDuplicatenode(x, y, theta_in_circular,V)):
         
         next_node[0]=x
         next_node[1]=y
@@ -326,12 +321,12 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
         p1=np.array(goal_state[0:2])
         p2=np.array(node[3][0:2])
         distance=np.linalg.norm(p1-p2)
-        l=(3*robot_radius)
+        l=1.5
         
         if (distance**2)<=(l**2):
             back_track_flag=True
             apprx_goal=node[3]
-            print('Started BackTracking')
+            print('************Started BackTracking**************\n')
             break
         
         del p1
@@ -471,7 +466,7 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
                            open_list[idx][2] = node[3]
                            hp.heapify(open_list)
                 temp_list.clear()
-        print(len(open_list))
+        # print(len(open_list))
         hp.heapify(open_list)
 
     if(back_track_flag):
@@ -483,6 +478,24 @@ def AStar(start_state,goal_state,canvas,step_size,robot_radius):
     
 
 def backTrack(start_state,apprx_goal,closed_list,canvas):
+    
+    video_writer = cv2.VideoWriter_fourcc(*'XVID')
+    out = cv2.VideoWriter('Planning_exploration.avi',video_writer,100,(1920,1080))
+    
+   # plotting explored vectors
+    for key in closed_list.keys():
+        X=int(key[0])
+        Y=int(key[1])
+        val=closed_list[key]
+        U=int(val[0]) 
+        V=int(val[1])
+        
+        cv2.arrowedLine(canvas,(U,V), (X,Y), (255,0,0),tipLength=2)
+        cv2.imshow('exploring', canvas)
+        # cv2.resize(canvas, (1920,1080))
+        out.write(canvas)
+        cv2.waitKey(100)
+    # plotting optimal path
     optimal_path=[]
     optimal_path.append(apprx_goal)
     
@@ -495,7 +508,7 @@ def backTrack(start_state,apprx_goal,closed_list,canvas):
         optimal_path.append(parent)
     
     optimal_path.append(start_state)
-    print(optimal_path)
+    print('Optimal Path generated is: \n ',optimal_path)
     
     for state in optimal_path:
         
@@ -503,10 +516,13 @@ def backTrack(start_state,apprx_goal,closed_list,canvas):
         y=int(state[1])
         
         cv2.circle(canvas,(x,y),2,(0,0,255),-1)
-        # canvas[int(y)][int(x)]=[255,0,0]
     
-    cv2.imshow('test', canvas)
-    cv2.waitKey(0)
+        cv2.imshow('exploring', canvas)
+        out.write(canvas)
+        cv2.waitKey(100)
+    
+    out.release()
+    # cv2.waitKey(0)
     cv2.destroyAllWindows()
         
 if __name__=='__main__':
@@ -514,9 +530,9 @@ if __name__=='__main__':
     canvas=np.ones((250,400,3),dtype='uint8')
     canvas=createObstacles(canvas)
     
-    cv2.imshow('CANVAS',canvas)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('CANVAS',canvas)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     
     height,width,_=canvas.shape
     a_height=height-1
@@ -524,11 +540,7 @@ if __name__=='__main__':
     
     start_state,goal_state,clearence,robot_radius,step_size=getInputs()
     
-# =============================================================================
-#     print(start_state)
-#     print(goal_state)
-#     
-# =============================================================================
+
     # changing world co-ordinates to map-coordinates
     start_state[1]=a_height-start_state[1]
     goal_state[1]=a_height-goal_state[1]
@@ -537,18 +549,7 @@ if __name__=='__main__':
     
     V=np.zeros((500,800,12),dtype='uint8')
     
-    # x,y=actionZero([10.0,9.0,30],canvas,step_size)
-    
-    # x,y=actionNegativeThirty([10.0,9.0,30],canvas,step_size)
-    
-    # print(x)
-    # print(y)
-    
-    
+   
+ 
     AStar(start_state,goal_state,canvas,step_size,robot_radius)
     
-    
-    # print(goal_state)
-    # cv2.imshow('CANVAS',canvas)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
